@@ -2,6 +2,7 @@ import fastapi
 import database
 import pydantic_models
 import config
+from fastapi import Request      # позволяет нам перехватывать запрос и получать по нему всю информацию
 
 import fastapi
 import database
@@ -58,3 +59,11 @@ def get_total_balance():
         total_balance += pydantic_models.User(**user).balance
     return total_balance
 
+
+@app.get('/')       # метод для обработки get запросов
+@app.post('/')      # метод для обработки post запросов
+@app.put('/')       # метод для обработки put запросов
+@app.delete('/')    # метод для обработки delete запросов
+def index(request: Request):  # тут request - будет объектом в котором хранится вся информация о запросе
+    return {"Request" : [request.method,    # тут наш API вернет клиенту метод, с которым этот запрос был совершен
+                         request.headers]}  # а тут в ответ вернутся все хедеры клиентского запроса
